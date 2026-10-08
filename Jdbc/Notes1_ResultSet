@@ -1,0 +1,49 @@
+Method:
+
+1. Scrollability: Determines whether you can move back and forth in the ResultSet
+
+TYPE_FORWARD_ONLY: Can only move forward through the rows
+TYPE_SCROLL_INSENSITIVE: Can move forward and backward but changes in the database are not reflected in the ResultSet
+TYPE_SCROLL_SENSITIVE: Can move forward and backward but changes are affect the ResultSet
+
+2. Concurrency: Determines whether you can update the ResultSet
+
+CONCUR_READ_ONLY: Can only read data
+CONCUR_UPDATABLE: Allows updates to the ResultSet
+
+3. Holdability: Determines what happens to the ResultSet when a Transaction is committed.
+
+HOLD_CURSORS_OVER_COMMIT: The ResultSet remains open after a commit
+CLOSE_CURSORS_AT_COMMIT: The ResultSet closes after a commit
+------------------------------------------------------------------------------------------------------------------------
+
+1. Navigating a ResultSet: Basically these methods are allow is to navigate through the ResultSet and we can navigate in different ways,
+Below We provide those methods to navigate in the ResultSet.
+
+next(): Used to move to the next row in the ResultSet.
+previous(): Used for move to previous row in the ResultSet
+first(): Used for move to first row in the ResultSet
+last(): Used for move to last row in the ResultSet
+absolute(int row): Used to move to specific row
+relative(int rows): Used for Moves forward or backward by the specified number of rows
+beforeFirst(): Used for Positions the cursor before the first row
+afterLast(): Used for Positions the cursor after the last row
+
+2. Retrieving Data from a ResultSet: These methods retrieve data from the current row in the ResultSet.
+And also You can retrieve data by column index or column name.
+
+getInt(int columnIndex): Used for Retrieves an integer from the specified column
+getString(int columnIndex): Used for Retrieves a string from the specified column
+getDouble(int columnIndex): Used for Retrieves a double from the specified column
+getBoolean(int columnIndex): Used for Retrieves true or false from the specified column
+getDate(int columnIndex): Used for Retrieves a java.sql.Date
+getObject(int columnIndex): Used for Retrieves any type of object
+getArray(int columnIndex): Used for Retrieves a SQL array
+
+3. Updating Data in a ResultSet: These methods allow you to update data in the Result.
+
+updateInt(int columnIndex, int x): Used for Updates an integer value in the specified column
+updateString(int columnIndex, String x): used for Updates a string value
+updateBoolean(int columnIndex, boolean x): used for Updates a boolean value
+updateRow(): used for Updates a row
+deleteRow(): used for delete a row

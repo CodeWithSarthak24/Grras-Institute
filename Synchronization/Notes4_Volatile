@@ -1,0 +1,88 @@
+
+Let's make the concept visual.
+
+🔴 WITHOUT volatile
+
+Suppose:
+
+boolean running = true;
+
+We have two threads.
+
+                 SHARED VARIABLE
+                  running = true
+                       │
+          ┌────────────┴────────────┐
+          ↓                        	 ↓
+      Thread 1                  	Thread 2
+      reads true                	reads true
+          │                        		 │
+          │                    		changes it
+          │                    	 running = false
+          │                         	  │
+          ↓                         	  ↓
+    MAY STILL SEE                  	    false
+       true
+          │
+          ↓
+     Keeps running ❌
+
+The important part:
+
+Thread 2:
+running = false
+       ↓
+Thread 1:
+may still have/see old value = true
+
+So Thread 1 may not immediately see the change.
+
+🟢 WITH volatile
+
+Now:
+
+volatile boolean running = true;
+
+Flow:
+
+                  volatile variable
+                   running = true
+                        │
+          ┌─────────────┴─────────────┐
+          ↓                            ↓
+      Thread 1                  	  Thread 2
+      reads true               	         reads true
+          │                                  │
+          │                     			 changes value
+          │                      		running = false
+          │                           		 │
+          │                                  ↓
+          │                            change is visible
+          │                                  │
+          └───────────────→ 		sees false
+                                  	│
+                                  	↓
+                              	     stops ✅
+The main difference
+
+WITHOUT volatile:
+
+Thread 2 changes
+      ↓
+running = false
+      ↓
+Thread 1 may see old value
+      ↓
+true ❌
+
+
+WITH volatile:
+
+Thread 2 changes
+      ↓
+running = false
+      ↓
+Thread 1 sees latest value
+      ↓
+false ✅
+------------------------------

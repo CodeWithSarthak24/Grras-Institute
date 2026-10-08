@@ -1,0 +1,42 @@
+A try block may throw different types of exceptions, such as:
+
+ArithmeticException,
+ArrayIndexOutOfBoundsException,
+IOException
+
+Since we don't know which exception will occur at runtime, we write multiple catch blocks,
+and each catch block handles a specific exception differently.
+
+Example :
+
+try {
+    // Code that may throw different exceptions
+}
+catch (ArithmeticException e) {
+    System.out.println("Cannot divide by zero.");
+}
+catch (ArrayIndexOutOfBoundsException e) {
+    System.out.println("Invalid array index.");
+}
+catch (IOException e) {
+    System.out.println("File operation failed.");
+}
+
+If a division by zero occurs, only the ArithmeticException catch block runs.
+If an invalid array index occurs, only the ArrayIndexOutOfBoundsException catch block runs.
+If a file error occurs, only the IOException catch block runs.
+
+When do we use Multiple Catch Blocks?
+
+We use multiple catch blocks when:
+
+A single try block can throw different types of exceptions.
+Each exception requires different handling or a different message.
+
+For example:
+
+ArithmeticException → Show "Cannot divide by zero."
+FileNotFoundException → Show "File not found."
+SQLException → Roll back the database transaction.
+
+Each exception needs a different response, so separate catch blocks are the right choice.

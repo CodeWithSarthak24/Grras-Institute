@@ -1,0 +1,54 @@
+Interview Comparison:
+
+Feature	                 Association	Aggregation	   Composition
+Use object	             ✅	            ✅	           ✅
+Store reference	         ❌	            ✅	           ✅
+Create object inside	 ❌	            ❌             ✅
+Ownership	             ❌	            ❌	           ✅
+Independent lifecycle	 ✅	            ✅	           ❌
+Shareable	             ✅	            ✅	           ❌
+Relationship	         Uses-A	        Weak HAS-A	   Strong HAS-A
+
+
+Composition is a strong HAS-A relationship in which one class creates and owns another object.
+The contained object depends on the owner object for its lifecycle and cannot be shared independently.
+For example, a Car HAS-A Engine, where the Engine is created and managed by the Car.
+
+-----------------------------------
+
+Memory Trick:
+
+Association
+= Use
+
+Aggregation
+= Use + Store
+
+Composition
+= Create + Store + Own
+
+-------------------------------------
+
+How to Identify Composition?
+
+Ask these questions:
+
+Question 1: Who creates the object?
+
+If the class itself creates it:
+
+engine = new Engine(); ➡️ Composition
+
+Question 2: Can the object be shared?
+
+If NO: ➡️ Composition
+
+Example:
+
+One Heart → One Human
+One Engine → One Car
+
+Question 3: Does the contained object belong to the owner?
+
+If YES: ➡️ Composition
+

@@ -1,0 +1,122 @@
+Code :
+
+class Test {
+
+    void c() {
+        int x = 10 / 0;   // Exception occurs here
+    }
+
+    void b() {
+        c();
+    }
+
+    void a() {
+        b();
+    }
+
+    public static void main(String[] args) {
+        Test t = new Test();
+        t.a();
+    }
+}
+--------------------------------
+What happens step by step?
+
+main() calls a().
+a() calls b().
+b() calls c().
+In c(), 10/0 causes an ArithmeticException.
+
+Now ask yourself:
+
+Does c() handle the exception? ❌ No.
+
+So Java sends the exception back to the method that called c(), which is b().
+
+Does b() handle it? ❌ No.
+
+Java sends it to a().
+
+Does a() handle it? ❌ No.
+
+Java sends it to main().
+
+Does main() handle it? ❌ No.
+
+Finally, the JVM prints the exception and the program stops.
+
+This movement of the exception from c() → b() → a() → main() is called exception propagation.
+------------------------------
+Now let's catch it
+
+Code :
+
+class Test {
+
+    void c() {
+        int x = 10 / 0;
+    }
+
+    void b() {
+        c();
+    }
+
+    void a() {
+        try {
+            b();
+        } catch (ArithmeticException e) {
+            System.out.println("Exception handled in a()");
+        }
+    }
+
+    public static void main(String[] args) {
+        Test t = new Test();
+        t.a();
+    }
+}
+--------------------------
+As soon as a() catches it, the propagation stops. It does not go to main().
+--------------------------
+Paytm Example :
+
+payMoney()
+    │
+    │ Bank server is down
+    ▼
+Exception occurs
+    │
+payMoney() doesn't know whether to:
+- Retry
+- Show a popup
+- Log the error
+- Cancel the payment
+
+So Java propagates the exception to the caller.
+
+The caller decides:
+"Show 'Payment failed. Please try again later.'"
+-----------------------------
+Simple formula to remember for interviews
+
+Method = Do the work.
+Caller = Decide what to do if the work fails.
+---------------------------
+1. ATM Application 💳
+
+withdrawMoney()
+
+Suppose there's not enough balance.
+
+Should withdrawMoney() decide:
+
+Show an error on the ATM screen?
+Send an SMS?
+Print a receipt?
+
+❌ No.
+
+It just throws the exception.
+
+The caller (ATM application) decides:
+
+"Show 'Insufficient Balance' on the screen."

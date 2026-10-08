@@ -1,0 +1,38 @@
+Code:
+
+Comparator<Integer> c = (a, b) -> b - a; // max-heap
+
+PriorityQueue<Integer> pq = new PriorityQueue<>(c);
+
+Step1: Comparator<Integer> c
+
+This creates a Comparator named c.
+
+A Comparator tells Java: "When you compare two integers, use this rule to decide their order."
+
+Step2: (a, b) -> b - a
+
+This is a lambda expression that defines the comparison rule.
+
+Here:
+
+a = first number
+b = second number
+b - a = comparison rule
+
+It means larger numbers should come before smaller numbers.
+
+For example:
+
+a = 10
+b = 30
+
+b - a
+
+30 - 10 = positive
+
+This makes 30 come before 10.
+
+So the order becomes: 30 → 20 → 10
+
+That's why it creates a max-heap behavior.

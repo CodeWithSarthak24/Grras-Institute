@@ -1,0 +1,25 @@
+Future.get() says:
+
+"I can throw InterruptedException and ExecutionException."
+
+So you have two choices:
+
+Option 1: Use throws
+
+public static void main(String[] args)
+        throws InterruptedException, ExecutionException {
+
+    int result = f.get();
+}
+
+You're saying: "I won't handle the exceptions here; I'll let them propagate."
+--------------
+Option 2: Use try-catch
+
+try {
+    int result = f.get();
+} catch (InterruptedException | ExecutionException e) {
+    e.printStackTrace();
+}
+
+You're saying: "I'll handle the exceptions here."

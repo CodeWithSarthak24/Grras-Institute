@@ -1,0 +1,57 @@
+2. Why is Aggregation called "Weak HAS-A"?
+
+The main reason is independence, not just sharing.
+
+Suppose:
+
+Teacher t =
+    new Teacher("Alex");
+
+Now:
+
+Department it =
+    new Department("IT", t);
+
+Department cs =
+    new Department("CS", t);
+
+Memory:
+
+Alex Teacher Object
+        │
+        ├── IT Department
+        │
+        └── CS Department
+
+Same Teacher object is shared.
+
+Now delete IT Department:
+
+it = null;
+
+Question: Does Alex Teacher disappear? -> No.
+
+Question: Does CS Department still use Rahul? -> Yes.
+
+Because Teacher exists independently.
+
+---------------------------------------
+
+Why Weak?
+
+Because Department does NOT own Teacher.
+Department only stores: reference.
+
+Teacher teacher;
+
+Teacher was created outside:
+
+Teacher t =
+    new Teacher("Alex");
+
+So:
+
+Delete Department ❌
+Teacher still exists ✔
+
+This makes the relationship weak.

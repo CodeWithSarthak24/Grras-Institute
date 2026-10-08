@@ -1,0 +1,23 @@
+Think of it like this:
+
+1. FileOutputStream → Opens a file
+
+FileOutputStream fos = new FileOutputStream("student.ser");
+
+Meaning: "Create or open the file student.ser so I can write data into it."
+
+It doesn't know how to write Java objects. It only knows how to write bytes to a file.
+
+2. ObjectOutputStream → Writes Java objects
+
+ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+Meaning: "I know how to convert Java objects into bytes and save them into the file."
+
+It uses FileOutputStream to store the bytes in student.ser.
+
+3. writeObject()
+
+oos.writeObject(s);
+
+Meaning: "Take the Student object s, convert it into bytes (serialization), and write it into student.ser."

@@ -1,0 +1,70 @@
+1. Concurrency: Concurrency decides whether the ResultSet is read-only or updatable.
+
+CONCUR_READ_ONLY
+
+This is the normal case.
+
+Statement st = con.createStatement(
+        ResultSet.TYPE_SCROLL_INSENSITIVE,
+        ResultSet.CONCUR_READ_ONLY
+);
+
+
+ResultSet rs = st.executeQuery("SELECT * FROM T1");
+
+Now you can navigate:
+
+rs.next();
+rs.previous();
+rs.absolute(2);
+
+But you cannot update the ResultSet:
+
+rs.updateString("Name", "Sarthak");  // ❌
+------------------------------------------
+2. CONCUR_UPDATABLE: This allows you to update/delete the current row through the ResultSet.
+
+Statement st = con.createStatement(
+        ResultSet.TYPE_SCROLL_SENSITIVE,
+        ResultSet.CONCUR_UPDATABLE
+);
+
+
+ResultSet rs = st.executeQuery("SELECT * FROM T1");
+
+Now:
+
+while (rs.next()) {
+    if (rs.getInt("Id") == 101) {
+        rs.updateString("Name", "Sarthak");
+        rs.updateRow();
+    }
+}
+
+The database row is updated.
+
+You can also: rs.deleteRow();
+
+while (rs.next()) {
+
+    if (rs.getInt("Id") == 102) {
+        rs.deleteRow();
+        break;
+    }
+}
+---------------------------------------------------
+ResultSet.HOLD_CURSORS_OVER_COMMIT : The ResultSet stays open after commit(), so you can continue reading data from it. ✅
+
+Example:
+
+ResultSet rs = st.executeQuery("SELECT * FROM T1");
+
+rs.next();
+
+con.commit();
+
+rs.next();   // Still possible ✅
+
+Whereas:
+
+ResultSet.CLOSE_CURSORS_AT_COMMIT : The ResultSet is closed after commit(), so you cannot continue using it. ❌

@@ -1,0 +1,76 @@
+Sure. Here are two simple examples—one where isTerminated() is false and one where it is true.
+
+1. isTerminated() → false
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class Lecture40 {
+    public static void main(String[] args) {
+
+        ExecutorService pool = Executors.newFixedThreadPool(1);
+
+        pool.execute(() -> {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        pool.shutdown();
+
+        // Task is still running
+        System.out.println(pool.isTerminated());
+    }
+}
+
+
+Output: false
+
+Why?
+
+shutdown()
+    ↓
+Task still running
+    ↓
+isTerminated() → false
+
+--------------------------------------------
+2. isTerminated() → true
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class Lecture41 {
+    public static void main(String[] args) throws InterruptedException {
+
+        ExecutorService pool = Executors.newFixedThreadPool(1);
+
+        pool.execute(() -> {
+            System.out.println("Task finished");
+        });
+
+        pool.shutdown();
+
+        // Wait for the task to finish
+        pool.awaitTermination(5, java.util.concurrent.TimeUnit.SECONDS);
+
+        System.out.println(pool.isTerminated());
+    }
+}
+
+Output:
+
+Task finished
+true
+
+Flow:
+
+shutdown()
+    ↓
+Task finishes
+    ↓
+Pool terminates
+    ↓
+isTerminated() → true

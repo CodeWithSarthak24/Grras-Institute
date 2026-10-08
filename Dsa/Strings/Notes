@@ -1,0 +1,9 @@
+This is a very common Java interview question.
+
+equalsIgnoreCase() vs compareToIgnoreCase() :
+
+Feature	       equalsIgnoreCase()	                              compareToIgnoreCase()
+Purpose	       Checks if two strings are equal (ignoring case)	  Compares two strings lexicographically (ignoring case)
+Return Type	   boolean	                                          int
+Returns	       true or false	                                  Negative, 0, or Positive
+Use When	   You only want to know if strings are equal	      You want to compare or sort strings

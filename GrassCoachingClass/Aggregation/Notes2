@@ -1,0 +1,14 @@
+Using Setter :
+
+class Department {
+
+    List<Teacher> teachers;
+
+    void setTeachers(List<Teacher> teachers) {
+        this.teachers = teachers;
+    }
+}
+
+Department d = new Department();
+
+d.setTeachers(teacherList);

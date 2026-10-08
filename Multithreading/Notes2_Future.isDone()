@@ -1,0 +1,95 @@
+🧠 Remember:
+
+Task still running  → isDone() → false
+Task finished       → isDone() → true
+
+And:
+
+isDone() only checks; it does not wait.
+
+When the main thread calls get(), the main thread waits until the task is complete. After the task completes, get() returns the task's result
+(if there is one). Then isDone() checks whether the task is complete, so it returns true.
+
+Main Thread
+    ↓
+future.get()
+    ↓
+Waits
+    ↓
+Task completes
+    ↓
+get() returns result
+    ↓
+isDone()
+    ↓
+true
+-------------
+For a task with no return value:
+
+future.get();
+
+just waits for completion; there is no result to retrieve.
+---------------------
+1. isDone() → false
+
+Here we check while the task is still running:
+
+Future<?> future = pool.submit(() -> {
+
+    try {
+        Thread.sleep(3000);
+    } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+    }
+
+});
+
+System.out.println(future.isDone());
+
+
+Flow:
+
+Task starts
+    ↓
+sleep(3 seconds)
+    ↓
+Main checks isDone()
+    ↓
+false ❌
+
+The task has not finished yet, so: false
+-------------------------
+2. isDone() → true
+
+Here we wait until the task finishes:
+
+Future<?> future = pool.submit(() -> {
+
+    System.out.println("Task completed");
+
+});
+
+future.get(); // get() : Wait until the task finishes, then give me its result."
+
+System.out.println(future.isDone());
+
+Output:
+
+Task completed
+
+true
+
+Flow:
+
+submit()
+   ↓
+Task executes
+   ↓
+Task finishes
+   ↓
+future.get() returns
+   ↓
+isDone()
+   ↓
+true ✅
+---------------------

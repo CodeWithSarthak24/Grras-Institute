@@ -1,0 +1,230 @@
+These are different ways to create a thread:
+
+1. Extending Thread:
+
+class MyThread extends Thread {
+
+    @Override
+    public void run() {
+        System.out.println("Thread running");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        MyThread t = new MyThread();
+        t.start();
+    }
+}
+
+Use when: You specifically need to extend/customize Thread. Less preferred in modern Java because Java supports single inheritance.
+
+Explanation:
+
+Customize means change or add your own behavior to the Thread class.
+
+For example:
+
+class MyThread extends Thread {
+
+    @Override
+    public void run() {
+        System.out.println("My special task");
+    }
+}
+
+Here you customize the thread's behavior by providing your own run() method.
+--------------------------------
+2. Implementing Runnable:
+
+class MyTask implements Runnable {
+
+    @Override
+    public void run() {
+        System.out.println("Thread running");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        MyTask task = new MyTask();
+
+        Thread t = new Thread(task);
+        t.start();
+    }
+}
+
+Use when: You want to separate the task from the thread. Generally preferred over extending Thread.
+
+Explanation:
+
+Runnable → defines the task that should be performed
+Thread → runs/executes that task
+
+Example:
+
+Runnable task = () -> {
+    System.out.println("Doing work");
+};
+
+Thread t = new Thread(task);
+t.start();
+----------------------------
+3. Runnable using Lambda: Because Runnable is a functional interface:  {Lambda → implementation of Runnable.run()}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Runnable task = () -> {
+            System.out.println("Thread running");
+        };
+
+        Thread t = new Thread(task);
+        t.start();
+    }
+}
+
+Or shorter:
+
+Thread t = new Thread(() -> {
+    System.out.println("Thread running");
+});
+
+t.start();
+
+Use when: The task is small/simple. This is very common.
+
+Explanation:
+
+Using Runnable with Lambda
+
+Use when: The task is small/simple, and you don't want to write a separate Runnable class.
+
+Example:
+
+Thread t = new Thread(() -> {
+    System.out.println("Doing work");
+});
+
+t.start();
+
+Here:
+
+() -> { ... } → defines the task
+Thread → executes the task
+start() → starts the thread
+
+Why is it simple?
+
+Without lambda, you would write:
+
+Thread t = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        System.out.println("Doing work");
+    }
+});
+
+With lambda:
+
+Thread t = new Thread(() -> {
+    System.out.println("Doing work");
+});
+
+So: Lambda is a shorter and cleaner way to implement Runnable, especially for small/simple tasks.
+
+You have two choices with a lambda:
+
+1. Write the task directly in the lambda:
+
+Thread t = new Thread(() -> {
+    System.out.println("Doing work");
+});
+
+t.start();
+
+Here the task is written directly inside the lambda.
+
+2. Call a separate method from the lambda:
+
+You can keep the actual work in a separate method:
+
+public class Main {
+
+    static void doWork() {
+        System.out.println("Doing work");
+        System.out.println("Calculating...");
+    }
+
+    public static void main(String[] args) {
+
+        Thread t = new Thread(() -> {
+            doWork();
+        });
+
+        t.start();
+    }
+}
+-------------------
+4. Anonymous Class extending Thread:
+
+public class Main {
+    public static void main(String[] args) {
+
+        Thread t = new Thread() {
+
+            @Override
+            public void run() {
+                System.out.println("Thread running");
+            }
+        };
+
+        t.start();
+    }
+}
+
+Use when: You need a one-time Thread subclass without creating a separate class. Mostly useful for understanding older Java code.
+
+Explanation: Anonymous Class using Thread
+Use when: Anonymous Thread class is useful for creating a Thread object with custom behavior for a one-time/specific use,
+without creating a separate named class.
+
+Thread t = new Thread() {
+    @Override
+    public void run() {
+        System.out.println("Doing work");
+    }
+};
+
+new Thread() → creates a Thread object
+{ ... } → gives that Thread object a custom run() implementation
+t.start() → starts that thread
+----------------------
+5. Anonymous Class implementing Runnable:
+
+public class Main {
+    public static void main(String[] args) {
+
+        Runnable task = new Runnable() {
+
+            @Override
+            public void run() {
+                System.out.println("Thread running");
+            }
+        };
+
+        Thread t = new Thread(task);
+        t.start();
+    }
+}
+
+Use when: You need a one-time Runnable task and don't want to create a separate class. Lambda is usually cleaner now.
+---------------------
+Yes, you can call your own method from the lambda. But you don't write run() inside the lambda because the lambda itself represents the run() method.
+
+Runnable task = () -> {
+    doWork();
+};
+----------------------------

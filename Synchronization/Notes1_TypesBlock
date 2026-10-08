@@ -1,0 +1,153 @@
+synchronized block: It can be written inside any executable block/context, such as:
+
+✅ Method
+✅ Constructor
+✅ Instance initializer block
+✅ Static initializer block
+
+But not directly inside the class body.
+
+class Test {
+
+    static {
+        synchronized (Test.class) {   // ✅
+            // code
+        }
+    }
+
+    Test() {
+        synchronized (Test.class) {   // ✅
+            // code
+        }
+    }
+
+    void display() {
+        synchronized (Test.class) {   // ✅
+            // code
+        }
+    }
+}
+------------------------------------------------
+2. What types of blocks are there in Java?
+
+There are 3 main types of blocks you should know:
+
+1. Instance Initialization Block
+
+class Test {
+
+
+    {
+        System.out.println("Instance block");
+    }
+}
+
+Runs when an object is created.
+----
+2. Static Initialization Block
+
+class Test {
+
+
+    static {
+        System.out.println("Static block");
+    }
+}
+
+Runs when the class is loaded.
+----
+3. Synchronized Block
+
+class Test {
+
+
+    void show() {
+
+
+        synchronized (Test.class) {
+            System.out.println("Synchronized");
+        }
+    }
+}
+
+Used for thread synchronization.
+It must be inside executable code.
+------------------------------------------ synchronized(ClassName.class) ------------------
+class level lock : Even though multiple objects have their own object locks, ClassName.class provides one common class-level lock that all those objects can use for synchronization.
+
+class Counter {
+
+    static int count = 0;
+
+    void increment() {
+
+        synchronized (Counter.class) {
+            count++;
+        }
+    }
+}
+
+You created:
+
+Counter c1 = new Counter();
+Counter c2 = new Counter();
+
+There are two objects:
+
+c1 → 🔒 object lock
+c2 → 🔒 object lock
+
+But Counter.class is one thing:
+
+Counter.class → 🔒 ONE class-level lock
+
+So:
+
+T1 → c1 → Counter.class 🔒
+T2 → c2 → Counter.class 🔒
+
+Both threads want the same lock.
+Therefore, one waits.
+------------------------------------- synchronized(this) ------------------------------
+class Counter {
+
+    void increment() {
+
+        synchronized(this) {
+            // critical section
+        }
+    }
+}
+
+Create 3 objects:
+
+Counter c1 = new Counter();
+Counter c2 = new Counter();
+Counter c3 = new Counter();
+
+Each object has its own lock:
+
+c1 → 🔒 Lock 1
+c2 → 🔒 Lock 2
+c3 → 🔒 Lock 3
+
+When you write:
+
+synchronized(this)
+
+this means the current object.
+
+So:
+
+T1 → c1 → this = c1 → 🔒 Lock 1
+T2 → c2 → this = c2 → 🔒 Lock 2
+T3 → c3 → this = c3 → 🔒 Lock 3
+
+Therefore, T1 and T2 can enter at the same time, because they are using different locks.
+----------------
+Same lock: One thread enters → other thread waits.
+Different locks: Both threads can enter at the same time.
+--------------------------------------------- synchronized(obj) -----------------------------
+
+
+

@@ -1,0 +1,74 @@
+For Aggregation, both constructor injection and setter injection work, but in interviews and real projects,
+constructor injection is usually preferred.
+
+1. Constructor Injection (Preferred ✅)
+
+class Department {
+
+    private Teacher teacher;
+
+    Department(Teacher teacher) {
+        this.teacher = teacher;
+    }
+}
+
+Usage:
+
+Teacher t = new Teacher("Rahul");
+
+Department d = new Department(t);
+
+Advantages:
+
+✅ Object is fully initialized when created.
+
+✅ No chance of forgetting to set the Teacher.
+
+✅ More secure and reliable.
+
+✅ Commonly used in Spring Framework (Dependency Injection).
+
+------------------------------------------------------------------------------
+
+2. Setter Injection
+
+class Department {
+
+    private Teacher teacher;
+
+    void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
+}
+
+Usage:
+
+Teacher t = new Teacher("Rahul");
+
+Department d = new Department();
+
+d.setTeacher(t);
+
+Advantages:
+
+✅ Can change Teacher later.
+
+✅ Useful when dependency is optional.
+
+Disadvantage:
+
+Department d = new Department();
+
+d.show();
+
+If teacher was never set:
+
+NullPointerException
+
+can occur.
+
+
+-> Interview Answer:
+
+For Aggregation, constructor injection is generally preferred because it ensures the required object is provided during object creation
+and prevents incomplete initialization. Setter injection is useful when the dependency is optional or needs to be changed later.

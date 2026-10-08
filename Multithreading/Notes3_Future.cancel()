@@ -1,0 +1,168 @@
+import java.util.concurrent.*;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+
+        ExecutorService pool =
+                Executors.newFixedThreadPool(1);
+
+        // Task 1
+        Future<?> f1 = pool.submit(() -> {
+            try {
+                System.out.println("Task 1 started");
+
+                Thread.sleep(5000);
+
+                System.out.println("Task 1 finished");
+
+            } catch (InterruptedException e) {
+                System.out.println("Task 1 interrupted");
+            }
+        });
+
+        // Task 2
+        Future<?> f2 = pool.submit(() -> {
+            System.out.println("Task 2 started");
+        });
+
+        // Cancel Task 2
+        f2.cancel(true);
+
+        pool.shutdown();
+    }
+}
+
+
+What happens?
+
+We have:
+
+1 Worker Thread
+
+But we submit:
+
+2 Tasks
+
+Step 1 — Task 1
+
+The worker takes Task 1:
+
+Worker 1
+   ↓
+Task 1 → Running
+   ↓
+sleep(5 seconds)
+
+Step 2 — Task 2
+
+Worker 1 is busy, so Task 2 cannot run:
+
+Worker 1 → Task 1
+              ↓
+            Running
+
+Task 2 → Queue
+
+Step 3 — Cancel Task 2
+
+We call:
+
+f2.cancel(true);
+
+Since Task 2 has not started, it is cancelled:
+
+Task 2 → Queue
+          ↓
+     cancel(true)
+          ↓
+      CANCELLED
+          ↓
+      Never starts
+
+Step 4 — Task 1 continues
+
+Task 1 was not cancelled.
+-------------------------------------
+Worker 1
+   ↓
+Task 1
+   ↓
+sleep(5 seconds)
+   ↓
+Task 1 finished
+
+Output
+
+Task 1 started
+
+Task 1 finished
+
+"Task 2 started" is never printed.
+-----------------------------
+Now understand the important point:
+
+        1 Worker
+           ↓
+     ┌─────────────┐
+     │   Task 1    │ 		← Running
+     └─────────────┘
+
+     ┌─────────────┐
+     │   Task 2    │ 		← Queue
+     └─────────────┘
+           ↓
+      cancel(true)
+           ↓
+      Task 2 cancelled
+
+There is no InterruptedException for Task 2 because Task 2 never started running.
+---------------------------
+What if we cancelled Task 1 instead?
+
+If we did:
+
+f1.cancel(true);
+
+then:
+
+Worker 1
+   ↓
+Task 1 running
+   ↓
+sleep(5 seconds)
+   ↓
+cancel(true)
+   ↓
+Worker thread interrupted
+   ↓
+sleep() throws InterruptedException
+   ↓
+catch block
+
+Then Task 1 can stop early, and the worker can become available to execute Task 2.
+
+So the key difference is:
+
+Task in queue → cancel → task doesn't start.
+
+Task already running → cancel(true) → thread is interrupted → interruptible methods such as sleep() can throw InterruptedException
+------------------------------------
+"If a task has not started and is still in the queue, we can cancel it so that it never executes. This avoids unnecessary work and saves system resources."
+------------------------------------
+So the two conditions have different purposes:
+
+Running task
+    ↓
+cancel(true)
+    ↓
+Interrupt the running task
+
+and,
+
+Queued task
+    ↓
+cancel()
+    ↓
+Prevent the task from starting
+-------------------------------

@@ -1,0 +1,94 @@
+You have 3 threads:
+
+Lecture13 object = l
+        🔒
+        │
+ ┌──────┼──────────┐
+ ↓      ↓          ↓
+T-0    T-1        Main
+ │      │           │
+ │      │           │
+data   own        wait
+=1000  work         ⏳
+
+Step-by-step flow:
+
+1. Object is created:
+
+Lecture13 l = new Lecture13();
+
+There is one object:
+
+l → 🔒 Lock
+    data = 0
+
+2. Thread-0 is created and started:
+
+Runnable r = l::print;
+Thread t = new Thread(r);
+t.start();
+
+Thread-0 executes:
+
+public synchronized void print() {
+    data = 100 * 10;
+    notify();
+}
+
+Because print() is synchronized:
+
+Thread-0
+   ↓
+enters print()
+   ↓
+gets l's lock 🔒
+   ↓
+data = 1000
+   ↓
+notify()
+
+notify() wakes a thread waiting on l.
+
+3. Thread-1 is created:
+
+Thread t2 = new Thread(r2);
+t2.start();
+
+Thread-1 does:
+
+System.out.println("I'm going to done my own work");
+
+Thread-1 does not use l's lock.
+
+So it can simply do its own work:
+
+Thread-1
+   ↓
+"I'm going to done my own work"
+   ↓
+finished
+
+It has nothing to do with wait()/notify() here.
+
+4. Main thread reaches this:
+
+synchronized (l) {
+    System.out.println("Waiting for data");
+    l.wait();
+}
+
+Main tries to get l's lock:
+
+Main
+  ↓
+synchronized(l)
+  ↓
+gets l's lock 🔒
+  ↓
+prints "Waiting for data"
+  ↓
+l.wait()
+  ↓
+releases l's lock 🔓
+  ↓
+waits ⏳

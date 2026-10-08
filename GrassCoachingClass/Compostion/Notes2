@@ -1,0 +1,59 @@
+Current Code (Composition):
+
+class Mercedes {
+
+    private Engine engine;
+
+    Mercedes(String modalName) {
+        this.modalName = modalName;
+        engine = new Engine();
+    }
+}
+
+Here:
+
+Mercedes creates Engine ✔
+
+Mercedes owns Engine ✔
+
+Composition ✔
+
+-----------------------------------
+
+Option 1: Create at Field Declaration:
+
+class Mercedes {
+
+    private Engine engine = new Engine();
+
+    Mercedes(String modalName) {
+        this.modalName = modalName;
+    }
+}
+
+Still:
+
+Mercedes creates Engine ✔
+
+Composition ✔
+
+The constructor is not required.
+
+------------------------------------------
+
+Option 2: Create Inside a Method:
+
+class Mercedes {
+
+    private Engine engine;
+
+    void createEngine() {
+        engine = new Engine();
+    }
+}
+
+Still:
+
+Mercedes creates Engine ✔
+
+Composition ✔

@@ -1,0 +1,106 @@
+Example: Online Shopping
+
+Suppose you're writing code for an online shopping application.
+
+The main task is:
+
+Login,
+Select product,
+Apply coupon (optional),
+Payment,
+Generate invoice
+
+Here, applying the coupon is the specific part.
+
+If applying the coupon fails, should the entire order fail? -> No.
+
+The customer can still buy the product without the coupon.
+
+So we give Apply Coupon its own try-catch.
+-------------
+Code :
+
+try {                         // Outer try
+
+    login();
+
+    selectProduct();
+
+    try {                     // Specific part
+        applyCoupon();
+    } catch (InvalidCouponException e) {
+        System.out.println("Invalid coupon. Continuing without discount.");
+    }
+
+    payment();
+
+    generateInvoice();
+
+} catch (Exception e) {
+    System.out.println("Order failed.");
+}
+
+---------------------
+Explanation :
+
+Why nested try?
+
+Because only the "Apply Coupon" part needs separate exception handling.
+
+If applyCoupon() fails:
+
+✅ Handle it inside the inner catch.
+✅ Continue with payment() and generateInvoice().
+
+If payment() fails:
+
+It is outside the inner try.
+So the outer catch handles it, because payment is a critical part of placing the order.
+---------------------
+Another Example: Student Registration
+
+Main task:
+
+Fill personal details,
+Upload profile photo (optional),
+Submit registration
+------------------
+Code:
+
+try {
+
+    fillDetails();
+
+    try {
+        uploadPhoto();
+    } catch (IOException e) {
+        System.out.println("Photo upload failed.");
+    }
+
+    submitRegistration();
+
+} catch (Exception e) {
+    System.out.println("Registration failed.");
+}
+-----------------
+Explanation :
+
+Here, uploading the photo is the specific part.
+
+If photo upload fails:
+
+Registration should still continue.
+So what does "specific part of the code" mean?
+
+It means:
+
+A small section inside a larger task that needs its own exception handling because its failure should not stop the entire operation.
+
+Examples of a "specific part":
+
+Applying a coupon during checkout.
+Uploading a profile picture during registration.
+Sending a notification email after an order is placed.
+Writing a log file after processing data.
+
+These are usually optional or independent operations, so we handle their exceptions separately.

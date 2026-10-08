@@ -1,0 +1,53 @@
+Example:
+
+Student table:
+
+Id    Name
+101   Sarthak
+102   Rahul
+
+Marks table:
+
+Id    Marks
+101   85
+102   90
+
+Both have Id.
+
+You want:
+
+Id    Name      Marks
+101   Sarthak   85
+102   Rahul     90
+
+That is what JoinRowSet helps you do.
+
+How?
+
+Student RowSet
+      +
+Marks RowSet
+      ↓
+ JoinRowSet
+       ↓
+Match using Id
+      ↓
+Combined data
+
+JoinRowSet joinRowSet = RowSetProvider.newFactory().createJoinRowSet();
+joinRowSet.addRowSet(studentRowSet, "Id");
+joinRowSet.addRowSet(marksRowSet, "Id");
+
+// No. studentRowSet is not the table name. It is the Java variable/object that represents the RowSet containing data from the Student table.
+
+// Here "Id" is the matching column.
+
+Then you can read the joined data:
+
+while (joinRowSet.next()) {
+    System.out.println(
+        joinRowSet.getInt("Id") + " " +
+        joinRowSet.getString("Name") + " " +
+        joinRowSet.getInt("Marks")
+    );
+}
